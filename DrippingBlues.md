@@ -67,7 +67,7 @@ john --wordlist=/usr/share/wordlists/rockyou.txt hash_respectmydrip
 ```
 3. Finalizo con el comando para ver la password encontrada
 ```php 
-john --show respectmydrip.zip
+john --show hash_respectmydrip.zip
 ```
 
 Descomprimo el zip con la contraseña `07-----` y obtengo otro fichero zip, `secret.zip` con contraseña y un fichero de texto que contiene:
