@@ -3,9 +3,9 @@
 #
 # CTF a la Máquina Teacher
 #
-# DATE: 7/Septiembre/2022
+# DATE: 1/Octubre/2022
 #
-# Buscar usuario  [ 9cd1f0b79d9474714c5a29214ec839a6 ] y root [ HappyBack2Sch00l ]
+# Gracias a @WWFYMN por las pistas
 #
 #########################################################################################################
 ```
@@ -21,7 +21,7 @@ IP_objetivo -> $netdiscover -r 192.168.0.0/24 -> 192.168.0.69
 ```php 
 nmap -sVC -T4 -n -p- 192.168.0.69
 ```
-* Obtengo los siguientes puertos abiertos, 21 FTP, 22 SSH y 80 HTTP
+* Obtengo los siguientes puertos abiertos, 22 SSH y 80 HTTP
 
 ```php 
 PORT   STATE SERVICE VERSION
@@ -78,9 +78,9 @@ RabbitHole lol
 * Fuzzeo el access para intentar sacar el parámetro
 
 ```php 
-wfuzz -u http://192.168.0.69/access.php?FUZZ=1 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50 --hh 0 --filter "l>0"
+wfuzz -c -w /usr/share/seclists/Discovery/Web-Content/url-params_from-top-55-most-popular-apps.txt -r 5 --hc 404 http://10.0.2.11/access.php?FUZZ=FUZZ
 ```
-
+> Obtengo un posible parámetro *id* 
 
 * Intento *cosas* con el script **access.php**, como por ejemplo
 
@@ -124,7 +124,7 @@ Pero nada 👎 en access.php,
 ```php 
 your logs: drwxr-xr-x 5 mrteacher mrteacher 4096 Sep 5 17:55 mrteacher
 ```
-> Así que ya tengo un nombre de usuario 
+> Así que ya tengo un nombre de usuario confirmado
 
 # Acceso
 
@@ -148,19 +148,18 @@ total 5324
 ```
 Y leyendo el pdf obtengo una contraseña
 
-![67-3](./67-3.png)
 
 * Accedo por ssh
 
 ```php 
 ssh mrteacher@192.168.0.69
-pass: ThankYouTeachers
+pass: Thank....
 ```
 
 * Capturo la bandera de usuario
 
 ```console
-9cd1f0b79d9474714c5a29214ec839a6
+9c.......
 ```
 
 # Acceso a Root
@@ -213,8 +212,3 @@ Teacher/unix:10  MIT-MAGIC-COOKIE-1  859f3db444b1a77d9c0602bd4d804c25
 
 5. Ejecutamos gedit como root, voy al directorio de root y obtengo bandera
 
-![67-5](./67-5.png)
-
-```console
-HappyBack2Sch00l
-```
