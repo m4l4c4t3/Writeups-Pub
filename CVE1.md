@@ -19,7 +19,7 @@ IP_objetivo -> $netdiscover -r 192.168.0.0/24 -> 192.168.0.86
 
 # Escaneo y Enumeración
 
-## Veo que puertos tiene abiertos,
+* Veo que puertos tiene abiertos,
 
 ```php 
 nmap -sVC -T5 -n -p- 192.168.0.86
