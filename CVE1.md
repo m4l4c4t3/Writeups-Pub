@@ -120,7 +120,7 @@ User wicca may run the following commands on cve-pt1:
 
 ## Elevación a root II forma
 
-* En el directori de `wicca` tenemos un fichero zip protegido con contraseña. Me lo traigo a mi máquina y lo crackeo con John.
+* En el directorio de `wicca` tenemos un fichero zip protegido con contraseña. Me lo traigo a mi máquina y lo crackeo con John.
 
 ```php
 zip2john Backup.zip > Backup.zip.hash
