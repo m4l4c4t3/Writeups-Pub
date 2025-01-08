@@ -552,7 +552,7 @@ Con ese usuario he podido obtener la bandera de usuario
 ```console
 c:\Users\quoted\Desktop>type user.txt
 type user.txt
-HMV{User_Flag_Obtained}
+HMV{}
 ```
 
 
@@ -560,7 +560,7 @@ HMV{User_Flag_Obtained}
 
 Ese usuario no tiene privilegios para obtener la bandera de `administrator` así que verifico el sistema operativo en el que estoy con el comando `systeminfo` . Veo que es un windows 7 SP1, que tendrá vulnerabilidades.
 
-Vamos a intentar crear una sesión, como en la máquina anterior [[005 - Always]], con metasploit y averiguar que vulns tiene.
+Vamos a intentar crear una sesión, con metasploit y averiguar que vulns tiene.
 
 1. Me creo un ejecutable envenenado con un meterpreter
 
@@ -620,7 +620,7 @@ Active sessions
 ```
 
 
-### Buscando vuln con metasploit con una sesión abierta
+### Buscando vulns con metasploit con una sesión abierta
 
 Como tengo la sesión 1 abierta, con un meterpreter, tengo que ejecutar el comando **background**  para no cerrar dicha sesión.
 
@@ -666,8 +666,5 @@ Y a partir de aquí obtengo bandera:
 
 ```console
 (Meterpreter 2)(C:\users\administrator\desktop) > cat root.txt
-HMV{Elevated_Shell_Again}
+HMV{}
 ```
-
-
-**Nota**: El comando en meterpreter `shell` me da una consola
