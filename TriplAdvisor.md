@@ -162,7 +162,7 @@ Obteniendo unos ficheros que debería examinar:
 
 Lo cargo en el navegador y me enseña esto:
 
-![XAMPP|450](009-w-1.png)
+![XAMPP|350](009-w-1.png)
 
 Tengo un XAMPP instalado en un windows y ese fichero suele estar en:
 
